@@ -1,0 +1,24 @@
+apply plugin: "com.jfrog.artifactory"
+
+artifactory {
+    contextUrl = project.artifactory_host   //The base Artifactory URL if not overridden by the publisher/resolver
+    publish {
+        repository {
+            repoKey = "libs-release-${project.libraryName}"
+            username = project.hasProperty('artifactory_publisher_user') ? project.artifactory_publisher_user : System.getenv()['ARTIFACTORY_PUBLISHER_USER']
+            password = project.hasProperty('artifactory_publisher_password') ? project.artifactory_publisher_password : System.getenv()['ARTIFACTORY_PUBLISHER_PASSWORD']
+            maven = true
+        }
+        defaults {
+            publications('dist')
+        }
+    }
+    resolve {
+        repository {
+            repoKey = 'libs-release'
+            username = project.hasProperty('artifactory_user') ? project.artifactory_user : System.getenv()['ARTIFACTORY_USER']
+            password = project.hasProperty('artifactory_password') ? project.artifactory_password : System.getenv()['ARTIFACTORY_PASSWORD']
+            maven = true
+        }
+    }
+}

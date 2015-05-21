@@ -1,0 +1,12 @@
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        dist(MavenPublication) {
+            groupId project.group
+            artifactId project.libraryName
+            version project.version
+            artifact "${project.buildDir}/outputs/aar/${project.name}-release.aar"
+        }
+    }
+}
