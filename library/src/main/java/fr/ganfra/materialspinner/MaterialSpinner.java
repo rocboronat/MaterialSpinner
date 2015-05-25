@@ -82,7 +82,7 @@ public class MaterialSpinner extends Spinner implements ValueAnimator.AnimatorUp
 
     //AttributeSet
     private int baseColor;
-    private int highlightColor;
+    private Integer highlightColor;
     private int errorColor;
     private CharSequence error;
     private CharSequence hint;
@@ -146,13 +146,15 @@ public class MaterialSpinner extends Spinner implements ValueAnimator.AnimatorUp
 
         TypedArray a = context.obtainStyledAttributes(new int[]{R.attr.colorControlNormal, R.attr.colorAccent});
         int defaultBaseColor = a.getColor(0, 0);
-        int defaultHighlightColor = a.getColor(1, 0);
         int defaultErrorColor = Color.parseColor("#E7492E");
         a.recycle();
 
         TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.MaterialSpinner);
         baseColor = array.getColor(R.styleable.MaterialSpinner_ms_baseColor, defaultBaseColor);
-        highlightColor = array.getColor(R.styleable.MaterialSpinner_ms_highlightColor, defaultHighlightColor);
+        highlightColor = array.getColor(R.styleable.MaterialSpinner_ms_highlightColor, -1);
+        if (highlightColor.equals(-1)) {
+            highlightColor = null;
+        }
         errorColor = array.getColor(R.styleable.MaterialSpinner_ms_errorColor, defaultErrorColor);
         error = array.getString(R.styleable.MaterialSpinner_ms_error);
         hint = array.getString(R.styleable.MaterialSpinner_ms_hint);
@@ -385,7 +387,7 @@ public class MaterialSpinner extends Spinner implements ValueAnimator.AnimatorUp
 
         } else {
             lineHeight = dpToPx(thickness);
-            if (isSelected) {
+            if (isSelected && highlightColor != null) {
                 paint.setColor(highlightColor);
             } else {
                 paint.setColor(baseColor);
@@ -397,7 +399,7 @@ public class MaterialSpinner extends Spinner implements ValueAnimator.AnimatorUp
 
         //Floating Label Drawing
         if (hint != null || floatingLabelText != null) {
-            if (isSelected) {
+            if (isSelected && highlightColor != null) {
                 textPaint.setColor(highlightColor);
             } else {
                 textPaint.setColor(floatingLabelColor);
@@ -415,7 +417,7 @@ public class MaterialSpinner extends Spinner implements ValueAnimator.AnimatorUp
     }
 
     private void drawSelector(Canvas canvas, int posX, int posY) {
-        if (isSelected) {
+        if (isSelected && highlightColor != null) {
             paint.setColor(highlightColor);
         } else {
             paint.setColor(arrowColor);
